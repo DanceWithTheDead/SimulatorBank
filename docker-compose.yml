@@ -6,7 +6,7 @@ services:
     command: >
       bash -c "chmod +x ./docker/entrypoint.sh && ./docker/entrypoint.sh && cd /opt/docker && supervisord"
     ports:
-      - 82:80
+      - 81:80
       - 444:443
     volumes:
       - ./:/app
@@ -23,6 +23,8 @@ services:
       XDEBUG_DISCOVER_CLIENT_HOST: 0
       XDEBUG_CLIENT_PORT: 9000
       XDEBUG_CLIENT_HOST: host.docker.internal
+    networks:
+        - shared-network
 
   pgsql:
     image: bitnami/postgresql:17.4.0
@@ -32,6 +34,8 @@ services:
       ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - .:/app
+    networks:
+        - shared-network
 
   pgsql_test:
     image: bitnami/postgresql:17.4.0
@@ -41,6 +45,8 @@ services:
       ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - .:/app
+    networks:
+        - shared-network
 
   redis:
     image: bitnami/redis:7.4
@@ -48,9 +54,19 @@ services:
       ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - 6378:6379
+    networks:
+        - shared-network
 
   php:
     image: webdevops/php:8.4-alpine
     working_dir: /app
     volumes:
       - ./:/app
+    networks:
+        - shared-network
+
+networks:
+    shared-network:
+        driver: bridge
+        external: true
+        name: shared-network
