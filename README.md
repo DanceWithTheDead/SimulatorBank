@@ -4,7 +4,7 @@ The Bank Simulator is a mock banking backend used to support the functionality o
 
 ## Project Setup
 ```
-docker compose up --build
+docker compose up -d
 ```
 
 Set the following values in .env and .env.testing:  
